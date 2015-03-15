@@ -15,21 +15,6 @@
 
 using namespace std;
 
-//struct State {
-//    int currentState;
-//    char input;
-//    
-//    State() {};
-//    State(char s, char i) {
-//        currentState = s;
-//        input = i;
-//    }
-//    
-//    bool operator<( const State & n ) const {
-//        return this->input < n.input;   // for example
-//    }
-//};
-
 struct Transition {
     char next;
     char output;
@@ -44,8 +29,8 @@ struct Transition {
 };
 
 
-int main(int argc, const char * argv[]) {
-    // insert code here...
+int main() {
+
     
     typedef vector<char> vecList;
     vecList finalStates;
@@ -54,51 +39,54 @@ int main(int argc, const char * argv[]) {
     // Map types
     typedef map<char, Transition> inputTransition;
     map<char, inputTransition> m;
-    //map<State, Transition> m;
 
     // Read from file
     string line;
-    ifstream myfile ("input.txt");
-    if (myfile.is_open())
-    {
-        while (getline (myfile,line))
+    //std::getline(std::cin, line);
+    //ifstream myfile ("input.txt");
+    //if (myfile.is_open())
+    //{
+        while (getline (cin ,line))
         {
-            string s = "";
-            for ( int i = 0 ; i < line.length(); i++)
+            if (!line.empty())
             {
-                if (!isspace(line[i]))
-                    s += line[i];
-            }
-            
-            if (s[0] == 't') { // transition
+                string s = "";
+                for ( int i = 0 ; i < line.length(); i++)
+                {
+                    if (!isspace(line[i]))
+                        s += line[i];
+                }
                 
-                inputTransition tempMap;
-                //tempMap[s[2]] = Transition(s[3], s[4], s[5]); // add to inputTransition map
-                m[s[1]][s[2]] = Transition(s[3], s[4], s[5]);
-            }
-            
-            else if (s[0] == 'f') { // final states
-                for (int i = 1; i < s.length(); i++)
-                {
-                    finalStates.push_back(s[i]);
+                if (s[0] == 't') { // transition
+                    
+                    inputTransition tempMap;
+                    m[s[1]][s[2]] = Transition(s[3], s[4], s[5]);
                 }
-            }
-            
-            else { // input string
-                vector<char> newString;
-                newString.push_back('Z'); // begin with Z
-                for (int i = 1; i < s.length(); i++)
-                {
-                    newString.push_back(s[i]);
+                
+                else if (s[0] == 'f') { // final states
+                    for (int i = 1; i < s.length(); i++)
+                    {
+                        finalStates.push_back(s[i]);
+                    }
                 }
-                newString.push_back('Z'); // end with Z
-                inputs.push_back(newString);
-//                for (vecList::iterator it = newString.begin(); it != newString.end(); it++)
-//                    std::cout << *it;
-//                cout << endl;
+                
+                else { // input string
+                    vector<char> newString;
+                    newString.push_back('Z'); // begin with Z
+                    for (int i = 1; i < s.length(); i++)
+                    {
+                        newString.push_back(s[i]);
+                    }
+                    newString.push_back('Z'); // end with Z
+                    inputs.push_back(newString);
+                    //                for (vecList::iterator it = newString.begin(); it != newString.end(); it++)
+                    //                    std::cout << *it;
+                    //                cout << endl;
+                }
+                
             }
         }
-        myfile.close();
+        //myfile.close();
 
         // TESTING TO SEE ALL STATES
 //        for(map<char, inputTransition>::iterator it = m.begin(); it != m.end(); ++it) {
@@ -109,8 +97,8 @@ int main(int argc, const char * argv[]) {
 //            }
 //        }
         
-    }
-    else cout << "Unable to open file";
+    //}
+    //else cout << "Unable to open file";
     
     
     /* TURING MACHINE */
@@ -156,7 +144,7 @@ int main(int argc, const char * argv[]) {
                 if(find(finalStates.begin(), finalStates.end(), nextState) == finalStates.end())
                     cout << "Not a final state" << endl;
                 else
-                    cout << "ACCEPT" << endl;
+                    cout << "ACCEPTED" << endl;
                 break;
             }
             
@@ -183,20 +171,9 @@ int main(int argc, const char * argv[]) {
         }
         
     }
-    
-    
+
     return 0;
 }
-
-
-// set current state
-// read input symbol
-// check if Z
-// add to output string
-// set current state to next state
-// move iterator right or left depending on R or L (for now increment every time)
-
-
 
 
 
