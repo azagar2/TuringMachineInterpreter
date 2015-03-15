@@ -25,6 +25,7 @@
 /* Begin PBXFileReference section */
 		651555AC1AB4B5B300F155E7 /* TuringInterpreter */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TuringInterpreter; sourceTree = BUILT_PRODUCTS_DIR; };
 		651555AF1AB4B5B300F155E7 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		651555B61AB5E19C00F155E7 /* input.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = input.txt; path = TuringInterpreter/input.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -41,6 +42,7 @@
 		651555A31AB4B5B300F155E7 = {
 			isa = PBXGroup;
 			children = (
+				651555B61AB5E19C00F155E7 /* input.txt */,
 				651555AE1AB4B5B300F155E7 /* TuringInterpreter */,
 				651555AD1AB4B5B300F155E7 /* Products */,
 			);
