@@ -1,9 +1,11 @@
-t 0 a 1 x R
-t 1 b 2 b R
-t 2 a 2 a R
+t 0 0 0 0 R
+t 0 1 0 1 R
+t 0 Z 1 Z L
+t 1 0 1 0 L
+t 1 1 2 0 R
+t 2 0 3 1 H
 t 2 Z 3 Z H
 f 3
-i abbab
-i aaaaa
-i ab
-i abaaa
+i 00000001
+i 01100101
+i 11010110

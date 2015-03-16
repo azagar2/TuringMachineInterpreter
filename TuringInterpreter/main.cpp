@@ -42,10 +42,7 @@ int main() {
 
     // Read from file
     string line;
-    //std::getline(std::cin, line);
-    //ifstream myfile ("input.txt");
-    //if (myfile.is_open())
-    //{
+
         while (getline (cin ,line))
         {
             if (!line.empty())
@@ -79,31 +76,13 @@ int main() {
                     }
                     newString.push_back('Z'); // end with Z
                     inputs.push_back(newString);
-                    //                for (vecList::iterator it = newString.begin(); it != newString.end(); it++)
-                    //                    std::cout << *it;
-                    //                cout << endl;
                 }
                 
             }
         }
-        //myfile.close();
 
-        // TESTING TO SEE ALL STATES
-//        for(map<char, inputTransition>::iterator it = m.begin(); it != m.end(); ++it) {
-//            cout << "state: " << it->first << "\n";
-//            inputTransition temp = it->second;
-//            for(inputTransition::iterator it = temp.begin(); it != temp.end(); ++it) {
-//                cout << "symbol: " << it->first << "\n";
-//            }
-//        }
-        
-    //}
-    //else cout << "Unable to open file";
-    
     
     /* TURING MACHINE */
-    
-    cout << inputs.size() << endl;
     
     for (int i = 0; i < inputs.size(); i++)
     {
@@ -118,7 +97,6 @@ int main() {
         while (true)
         {
             currentState = nextState;
-            //cout << "The current symbol is: " << *(it) << endl;
             
             // Check if input symbol is valid
             if (! m[currentState].count(*(it)))
@@ -129,13 +107,14 @@ int main() {
                 cout << output << endl;
                 cout << "REJECTED" << endl;
                 break;
-                // need to add on the rest of the input symbols to the output...
             }
             
             // Check if direction is H
             if (m[currentState][*(it)].direction == 'H')
             {
                 nextState = m[currentState][*(it)].next;
+                // Modify the tape
+                *(it) = m[currentState][*(it)].output;
                 // Add everything to the output string
                 for (vecList::iterator it = tape.begin() + 1; it != tape.end() - 1; it++) {
                     output += *(it);
@@ -150,7 +129,6 @@ int main() {
             
             // Set the next state
             nextState = m[currentState][*(it)].next;
-            //cout << "next state is: " << nextState << endl;
             char symbol = *(it);
             
             // Modify the tape
@@ -159,12 +137,10 @@ int main() {
             // Set next direction
             if (m[currentState][symbol].direction == 'L')
             {
-                //cout << "go left" << endl;
                 it--;
             }
             else if (m[currentState][symbol].direction == 'R')
             {
-                //cout << "go right" << endl;
                 it++;
             }
             
