@@ -1,5 +1,5 @@
 //
-//  main.cpp
+//  turing.cpp
 //  TuringInterpreter
 //
 //  Created by Andrea Zagar on 2015-03-14.
@@ -7,14 +7,15 @@
 //
 
 #include <iostream>
-#include <map>
 #include <cstdio>
-#include <fstream>
 #include <string>
 #include <vector>
+#include <map>
 
 using namespace std;
 
+
+/* Make a struct to model transition (next state, output symbol, head direction) */
 struct Transition {
     char next;
     char output;
@@ -31,66 +32,71 @@ struct Transition {
 
 int main() {
 
-    
+    // Make a vector of final states and a vector of inputs
     typedef vector<char> vecList;
     vecList finalStates;
     vector<vecList> inputs;
     
-    // Map types
+    // Make a map with the key = state, value = map of (key = input symbol, value = transition struct)
     typedef map<char, Transition> inputTransition;
     map<char, inputTransition> m;
 
-    // Read from file
+    // Read from cin
     string line;
 
-        while (getline (cin ,line))
+    // Read each line from cin
+    while (getline (cin ,line))
+    {
+        if (!line.empty())
         {
-            if (!line.empty())
-            {
-                string s = "";
-                for ( int i = 0 ; i < line.length(); i++)
+            // Take the blank characters out of the string
+            string s = "";
+            for ( int i = 0 ; i < line.length(); i++) {
+                if (!isspace(line[i]))
+                    s += line[i];
+            }
+            
+            // For transitions:
+            if (s[0] == 't') {
+                m[s[1]][s[2]] = Transition(s[3], s[4], s[5]);
+            }
+            
+            // For final states:
+            else if (s[0] == 'f') {
+                for (int i = 1; i < s.length(); i++) {
+                    finalStates.push_back(s[i]);
+                }
+            }
+            
+            // For input string:
+            else {
+                vector<char> newString;
+                newString.push_back('Z'); // begin with Z
+                for (int i = 1; i < s.length(); i++)
                 {
-                    if (!isspace(line[i]))
-                        s += line[i];
+                    newString.push_back(s[i]);
                 }
-                
-                if (s[0] == 't') { // transition
-                    
-                    inputTransition tempMap;
-                    m[s[1]][s[2]] = Transition(s[3], s[4], s[5]);
-                }
-                
-                else if (s[0] == 'f') { // final states
-                    for (int i = 1; i < s.length(); i++)
-                    {
-                        finalStates.push_back(s[i]);
-                    }
-                }
-                
-                else { // input string
-                    vector<char> newString;
-                    newString.push_back('Z'); // begin with Z
-                    for (int i = 1; i < s.length(); i++)
-                    {
-                        newString.push_back(s[i]);
-                    }
-                    newString.push_back('Z'); // end with Z
-                    inputs.push_back(newString);
-                }
-                
+                newString.push_back('Z'); // end with Z
+                inputs.push_back(newString); // add input to vector
             }
         }
+    }
 
     
     /* TURING MACHINE */
     
+    // Iterates through each input string
     for (int i = 0; i < inputs.size(); i++)
     {
+        // The current tape
         vecList tape = inputs[i];
         
+        // Make iterator for tape, but skip the first element which is Z
         vecList::iterator it = tape.begin();
-        it++; // skips the first element which is Z
+        it++;
         
+        
+        // Variables for while loop
         string output = "";
         char currentState, nextState = '0';
         
@@ -98,20 +104,23 @@ int main() {
         {
             currentState = nextState;
             
-            // Check if input symbol is valid
+            // Check if input symbol is in the map
             if (! m[currentState].count(*(it)))
             {
+                // If it is not valid, append the rest of the tape onto the output string
                 for (vecList::iterator it = tape.begin() + 1; it != tape.end() - 1; it++) {
                     output += *(it);
                 }
+                // Outputs
                 cout << output << endl;
                 cout << "REJECTED" << endl;
                 break;
             }
             
-            // Check if direction is H
+            // Check if direction is HALT
             if (m[currentState][*(it)].direction == 'H')
             {
+                // Set next state
                 nextState = m[currentState][*(it)].next;
                 // Modify the tape
                 *(it) = m[currentState][*(it)].output;
@@ -119,7 +128,9 @@ int main() {
                 for (vecList::iterator it = tape.begin() + 1; it != tape.end() - 1; it++) {
                     output += *(it);
                 }
+                // Output
                 cout << output << endl;
+                // Make sure it is a final state
                 if(find(finalStates.begin(), finalStates.end(), nextState) == finalStates.end())
                     cout << "Not a final state" << endl;
                 else
@@ -134,7 +145,7 @@ int main() {
             // Modify the tape
             *(it) = m[currentState][symbol].output;
             
-            // Set next direction
+            // Set next direction and increment or decrement the iterator (head)
             if (m[currentState][symbol].direction == 'L')
             {
                 it--;
@@ -143,7 +154,6 @@ int main() {
             {
                 it++;
             }
-            
         }
         
     }
